@@ -176,7 +176,7 @@ emp = max(counts, key=counts.get)   # 두 후보가 있지만 emp 는 'abc' 가 
 counts = collections.Counter(words)
 return counts.most_common(1)[0][0]                                  
 
-
+--------------------------------------------------
 "05 그룹 애너그램"
 문자열 배열을 받아 애너그램 단위로 그룹핑하라
 입력: ["eat", "tea", "tan", "ate", "nat", "bat"]
@@ -195,9 +195,63 @@ def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         anagrams[''.join(sorted(word))].append(word)
     return list(anagrams.values())
     
+word = 'eat'
+tmp = sorted(word)  # ['a', 'e', 't']   // 각 char 별로 list 화 되네..
+tmp2 = ''.join(sorted(word)) # 'aet'
 
 
+anagrams.values() 는 dict_values([['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]) 로 나온다.
+그걸 list 로 다시 추출하자
+list(anagrams.values()) 는 [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']] 이렇게 나온다.
+
+# collections.defaultdict(list) 구문 없이 그냥 딕셔너리 쓰면 어찌 되는가?
+car = {"name" : "BMW",  "price" : "7000" } 
+car["series"] = 7 
+print(car)      # {'name': 'BMW', 'price': '7000', 'series': 7}
+
+car["name"] = "Santafe"     // 삽입은 된다.
+print(car)      # {'name': 'Santafe', 'price': '7000', 'series': 7}
+
+del car["nam"]  예외가 발생함
+print(car)      # {'price': '7000', 'series': 7}
+
+"허나 기존 값에 갱신이 어렵다?" 잘만 되는 뎁쇼... 굳이 defaultdict 는 명시적으로 보이게끔 아닌가 싶다.
+car = {}
+car["abc"] = ['7']
+car["eee"] = ['3']
+car["abc"].append('7')
+car["ccc"] = []
+car["ccc"].append('c')
+# {'abc': ['7', '7'], 'ccc': ['c'], 'eee': ['3']}
+
+"정렬 방법 정리"
+sorted, sort() 차이
+aSortedList = sorted(aList)
+sList.sort()    None 을 리턴한다. sList 자체가 바뀐다. # 제자리 정렬 In-place Sort
+
+key 옵션
+c = ['ccc', 'aaaa', 'd', 'bb']
+sorted(c, key=len)
+---> ['d', 'bb', 'ccc', 'aaaa']
+
+응용 # 첫문자를 먼저 보고 그뒤 마지막 문자를 보는 정렬
+a = ['cde', 'cfc', 'abc']
+def fn(s):
+    return s[0], s[-1]
+print(sorted(a, key=fn))
+---> ['abc', 'cfc', 'cde']
+
+응용 # 람다
+a = ['cde', 'cfc', 'abc']
+sorted(a, key=lambda s: (s[0], s[-1])) # s 가 오면 s[0], s[-1] 을 리턴하라
+---> ['abc', 'cfc', 'cde']
 
 
+--------------------------------------------------
+"06 가장 긴 팰린드롬 부분 문자열" 가장 긴 회문찾기 manacher's algorithm 도 기회되면 보삼
+# 시간복잡도가 높을거 같은데.. O(n^2) 으로 보임. tco4 에서 palindrom : O(n^2) 은 dp 였는데.. 아래가 더 간단하네
 
-
+def longestPalindrom(self, s: str) -> str:
+    # 팰린드롬 판별 및 투 포인터 확장
+    def expand(left: int, right: int) -> str:
+        while (left >= 0 and right <= lens(s)
