@@ -254,4 +254,81 @@ sorted(a, key=lambda s: (s[0], s[-1])) # s 가 오면 s[0], s[-1] 을 리턴하�
 def longestPalindrom(self, s: str) -> str:
     # 팰린드롬 판별 및 투 포인터 확장
     def expand(left: int, right: int) -> str:
-        while (left >= 0 and right <= lens(s)
+        while (left >= 0 and right <= lens(s) and s[left] == s[right - 1]:
+            left -= 1
+            right += 1
+        return s[left + 1: right - 1]
+    # 해당 사항이 없을 때 빠르게 리턴
+    if len(s) < 2 or s == s[::-1]:
+        return s
+    
+    result = ''
+    # 슬라이딩 윈도우 우측으로 이동
+    for i in range(len(s) - 1):
+        result = max(result,
+                        expand(i, i + 1),   # aba 에서 i 가 1이고 i+1 는 2로 해서 들어가고 3이 리턴됨
+                        expand(i, i + 2),   # abba 에서 i가 1이고 i+2 는 3로 해서 들어가고 4가 리턴됨
+                        key = len)
+    return result
+    
+    
+<<<7장 배열>>>
+--------------------------------------------------    
+"07 두 수의 합" 덧셈하여 타겟을 만들 수 있는 배열의 두 숫자 인덱스를 리턴하라 (nums 는 정렬되어 있지 않아요)
+입력
+    nums = [2, 7, 11, 15], target = 9
+출력
+    [0, 1]
+    
+풀이 1) 브루트포스 O(n^2): 5284ms
+def twoSum(self, nums: List[int], target: int) -> List[int]:
+    for i in range(len(nums)):
+        for j in range(i + 1, len(nums)):
+            if nums[i] + nums[j] == target:
+                return [i, j]
+                
+풀이 2) in 을 이용한 탐색 O(n^2): 864ms
+def twoSum(self, nums: List[int], target: int) -> List[int]:
+    for i, n in enumerate(nums):
+        complement = target - n     # 보수
+        
+        if complement in nums[i + 1:]:  # 파이썬의 내부 함수이며 파이썬 레벨에서 매번 값을 비교하는 것보다 훨씬 더 빨리 실행됨
+            return nums.index(n), nums[i + 1:].index(complement) + (i + 1)
+ 
+풀이 3) 시간복잡도 개선 O(n): 48ms
+def twoSum(self, nums: List[int], target: int) -> List[int]:
+    nums_map = {}
+    # 키와 값을 바꿔서 딕셔너리로 저장
+    for i, num in enumerate(nums):
+        nums_map[num] = i
+        
+    # 타겟에서 첫 번째 수를 뺀 결과를 키로 조회
+    for i, num in enumerate(nums):
+        # 딕셔너리에 보수가 존재하고 그 놈이 자기자신이 아닌 경우
+        if target - num in nums_map and i != nums_map[target - num]:
+            return nums.index(num), nums_map[target - num]
+            
+
+--------------------------------------------------    
+"08 빗물 트래핑" 높이를 입력받아 비 온 후 얼마나 물이 쌓일 수 있는지 계산하라
+42. Trapping Rain Water
+입력
+    [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+          +1    +1 +2 +1
+출력
+    6
+def trap(self, height: List[int]) -> int:
+    if not height:
+        return 0
+    volume = 0
+    left, right = 0, len(height) - 1
+    left_max, right_max = height[left], height[right]
+    
+    while left < right:
+        left_max, right_max =   max(height[left], left_max), 
+                                max(height[right], right_max)
+        # 더 높은 쪽을 향해 투 포인터 이동
+        if left_max <= right_max:
+            volume += left_max - height[left]
+            
+            
