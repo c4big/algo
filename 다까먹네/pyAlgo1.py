@@ -317,6 +317,8 @@ def twoSum(self, nums: List[int], target: int) -> List[int]:
           +1    +1 +2 +1
 출력
     6
+    
+풀이 1) 투 포인터를 최대로 이동
 def trap(self, height: List[int]) -> int:
     if not height:
         return 0
@@ -330,5 +332,59 @@ def trap(self, height: List[int]) -> int:
         # 더 높은 쪽을 향해 투 포인터 이동
         if left_max <= right_max:
             volume += left_max - height[left]
+            left += 1
+        else:
+            volume += right_max - height[right]
+            right -= 1
             
+    return volume
+    
+       *
+   *   ** *
+ * ** ******
+
+                            ____                    3
+            ____                ____    ____        2
+    ____        ____    ____        ____    ____    1
+____    ____        ____                            0
+
+0   1   0   2   1   0   1   3   2   1   2   1          
+0   1   2   3   4   5   6   7   8   9   10  11
+
+left                                        right           lm  l   rm  r   vol
+0                                           1               0   0   1   1   0
+    1                                       1               1   1   1   1   0 
+        0                                   1               1   0   1   1   0 -> 1      # add = lm - l = 1 - 0 = 1   
+            2                               1               2   2   1   1   1    
+            2                           2                   2   2   2   2   1
+                1                       2                   2   1   2   2   1 -> 2      # add = lm - l = 2 - 1 = 1
+                    0                   2                   2   0   2   2   2 -> 4      # add = lm - l = 2 - 0 = 2
+                        1               2                   2   1   2   2   4 -> 5      # add = lm - L = 2 - 1 = 1
+                            3           2                   3   3   2   2   5
+                            3       1                       3   3   2   1   5 -> 6      # add = rm - r = 2 - 1 = 1
+                            3   2                           3   3   2   2   6
+                            33                              3   3   3   3   6
+
+
             
+def trap(self, height: List[int]) -> int:
+    if not height:
+        return 0
+    volume = 0
+    left, right = 0, len(height) - 1
+    left_max, right_max = height[left], height[right]
+    
+    while left < right:
+        left_max, right_max =   max(height[left], left_max),
+                                max(height[right], right_max),
+        if left_max <= right_max:
+            volume += left_max - height[left]
+            left += 1
+        
+        
+        
+        
+        
+        
+        
+        
