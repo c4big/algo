@@ -365,26 +365,150 @@ left                                        right           lm  l   rm  r   vol
                             3   2                           3   3   2   2   6
                             33                              3   3   3   3   6
 
-
-            
+풀이 2) 스택 쌓기 O(n) :56ms
 def trap(self, height: List[int]) -> int:
-    if not height:
-        return 0
+    stack = []
     volume = 0
-    left, right = 0, len(height) - 1
-    left_max, right_max = height[left], height[right]
     
-    while left < right:
-        left_max, right_max =   max(height[left], left_max),
-                                max(height[right], right_max),
-        if left_max <= right_max:
-            volume += left_max - height[left]
-            left += 1
+    for i in range(len(height)):
+        # stack 에 들어 있는 것은 정렬된 상태이며, back(가장 뒤)이 가장 작다.
+        # 현재 높이가 stack 내 원소보다 큰것들은 back 에서 부터 제거한다.
+        while stack and height[i] > height[stack[-1]]:
+            # 스택에서 꺼낸다
+            top = stack.pop()
+
+            if not len(stack):
+                break
+            
+            # 이전과의 차이만큼 물 높이 처리
+            distance = i - stack[-1] - 1
+            # 스택에 마지막 두개가 같은 높이인 경우 waters 높이가 0이 된다.
+            waters = min(height[i], height[stack[-1]]) - height[top]    
+            
+            volume += distance * waters
         
+        stack.append(i)
+    return volume
+
+                                        ____            5
+        ____                    ____                    4
+            ____            ____    ____                3
+                ____                                    2
+    ____            ________                            1
+____                                                    0
         
+0   1   4   3   2   1   1   3   4   3   5
+0   1   2   3   4   5   6   7   8   9   10
         
+        4   4   4   4   4   4   4   4   5       
+            3   3   3   3   3   4   4
+                2   2   2   3       3
+                    1   1   
+                        1
+# 10번째 처리때 4 4 3 이 뒤에서부터 지워짐 4-3 = 1 에서 waters height 가 1, 그뒤엔 4-4 = 0
+
+
+--------------------------------------------------    
+"09 세 수의 합"
+15. 3Sum
+입력
+    nums = [-1, 0, 1, 2, -1, -4]
+출력
+    [
+        [-1, 0, 1],
+        [-1, -1, 2]
+    ]
+풀이 1) 브루트 포스로 계산 O(n^3) : time out
+def threeSum(self, nums: List[int]) -> List[List[int]]:
+    results = []
+    nums.sort()
+    
+    # 브루트 포스 n^3 반복
+    for i in range(len(nums) - 2):
+        # 중복된 값 건너뛰기
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
         
+        for j in range(i + 1, len(nums) - 1):
+            if j > i + 1 and nums[j] == nums[j - 1]:
+                continue
+            
+            for k in range(j + 1, len(nums)):
+                if k > j + 1 and nums[k] == nums[k - 1]:
+                    continue
+                    
+                if nums[i] + nums[j] + nums[k] == 0:
+                    results.append([nums[i], nums[j], nums[k]])
+    return results
+    
+풀이 2) 투 포인터로 합 계산 O(n^2) : 884ms    # 중복 처리하는 방법이 재밌네
+def threeSum(self, nums: List[int]) -> List[List[int]]:
+    results = []
+    nums.sort()
+    
+    for i in range(len(nums) - 2):
+        # 중복된 값 건너뛰기
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
         
-        
-        
-        
+        # 간격을 좁혀가며 합 sum 계산
+        left, right = i + 1, len(nums) - 1
+        while left < right:
+            sum = nums[i] + nums[left] + nums[right]
+            if sum < 0:
+                left += 1
+            elif sum > 0:
+                right -= 1
+            else:
+                # sum = 0 인 경우이므로 정답 및 스킵 처리
+                results.append([nums[i], nums[left], nums[right]])
+                
+                while left < right and nums[left] == nums[left + 1]:
+                    left += 1
+                while left < right and nums[right] == nums[right - 1]:
+                    right -= 1
+                left += 1
+                right -= 1
+    return results
+
+--------------------------------------------------
+"10 배열 파티션I" 너무 쉬운거
+n개의 페어를 이용한 min(a, b) 의 합으로 만들 수 있는 가장 큰 수를 출력하라 (숫자는 짝수 개)
+입력
+    [1, 4, 3, 2]
+출력
+    4
+풀이 1) 332ms
+def arrayPairSum(self, nums: List[int]) -> int:
+    sum = 0
+    pair = []
+    nums.sort()
+    
+    for n in nums:
+        # 앞에서부터 오름차순으로 페어를 만들어서 합 계산
+        pair.append(n)
+        if len(pair) == 2:
+            sum += min(pair)
+            pair = []   # 초기화
+    return sum
+
+풀이 2) 308ms
+def arrayPairSum(self, nums: List[int]) -> int:
+    sum = 0
+    nums.sort()
+    
+    for i, n in enumerate(nums):
+        # 짝수 번째 값의 합 계산
+        if i % 2 == 0:
+            sum += n
+    return sum
+
+풀이 3) 파이썬다운 방식 284ms
+def arrayPairSum(self, nums: List[int]) -> int:
+    return sum(sorted(nums)[::2])       # (시작인덱스: 끝인덱스: 점프간격)
+
+
+
+
+
+
