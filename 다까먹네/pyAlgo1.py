@@ -588,6 +588,24 @@ reverse(1, None)
                 reverse(5, 4)
                     reverse(None, 5)
                         return 5
+                        
+풀이2) 반복 구조로 뒤집기
+def reverseList(self, head: ListNode) -> ListNode:
+    node, prev = head, None
+    
+    while node:
+        next, node.next = node.next, prev
+        prev, node = node, next
+        
+            
+    return prev
+                        
+
+next, node.next = 2, None
+prev, node = 1, 2
+
+next, node.next = 3, 1
+prev, node = 2, 3
 
 --------------------------------------------------
 
