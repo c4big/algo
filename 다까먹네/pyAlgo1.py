@@ -507,7 +507,65 @@ def arrayPairSum(self, nums: List[int]) -> int:
 def arrayPairSum(self, nums: List[int]) -> int:
     return sum(sorted(nums)[::2])       # (시작인덱스: 끝인덱스: 점프간격)
 
+--------------------------------------------------
+"11 자신을 제외한 배열의 곱"
+배열을 입역받아 output[i] 가 자신을 제외한 나머지 모든 요소의 곱셈 결과가 되도록 출력하라.
+입력
+    [1,2,3,4]
+출력
+    [24,12,8,6]
+# 주의: 나눗셈을 하지 않고 O(n) 에 풀이하라
+풀이)
+def productExceptSelf(self, nums: List[int]) -> List[int]:
+    out = []
+    p = 1
+    # 왼쪽 곱셈
+    # nums  = [ 2,  3,  5,  7]
+    # out   = [ 1,  2,  6,  30]  
+    for i in range(0, len(nums)):
+        out.append(p)
+        p = p * nums[i]
+        
+    p = 1
+    # 왼쪽 곱셈 결과에 오른쪽 값을 차례대로 곱셈
+    for i in range(len(nums) - 1, 0-1, -1):
+        out[i] = out[i] * p
+        p = p * nums[i]
+    # nums  = [ 2,  3,  5,  7]
+    # out   = [ 1,  2,  6,  30]  
+    # p val =               1
+                        7
+                    35
+                105
+    # out   = [105,70,  42, 30]
 
+--------------------------------------------------
+"12 주식을 사고팔기 가장 좋은 시점"
+한번의 거래로 낼 수 있는 최대 이익을 산출하라.
+입력
+    [7,1,5,3,6,4]
+출력
+    5   # 1일때 사서 6일때 팔면 이익 5를 얻는다.
+
+풀이 1) 무식한 방법 O(n^2) : time out
+def maxProfit(self, prices: List[int]) -> int:
+    max_price = 0
+    for i, price in enumerate(prices):
+        for j in range(i, len(prices)):
+            max_price = max(prices[j] - price, max_price)
+    return max_price
+
+풀이 2) 유사 카데인 알고리즘 O(n) : 64ms
+def maxProfit(self, prices: List[int]) -> int:
+    profit = 0
+    min_price = sys.maxsize # 시스템이 지정할 수 있는 가장 높은 값, 가장 낮은 값은 -sys.maxsize 로 설정하면 된다.
+    
+    # 최소값과 최대값을 계속 갱신
+    for price in prices:
+        min_price = min(min_price, price)
+        profit = max(profit, price - min_price)
+    return profit
+    		
 
 
 
